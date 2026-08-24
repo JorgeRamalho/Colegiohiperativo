@@ -1,5 +1,7 @@
 node_modules
 dist
+.vite
+html5/.vite
 *.local
 .DS_Store
 tsconfig.tsbuildinfo
