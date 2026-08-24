@@ -6,3 +6,5 @@ tsconfig.tsbuildinfo
 e2e-results
 playwright-report
 test-results
+.vercel
+
