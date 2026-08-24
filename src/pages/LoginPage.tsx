@@ -1,16 +1,17 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { UserLogin, INITIAL_LOGIN, FormErrors } from '../types';
 import { validateEmail } from '../utils/validation';
-import { submitLogin } from '../services/enrollmentApi';
+import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo/Logo';
 import './AuthPages.css';
 
 export default function LoginPage() {
+  const { token, signin } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState<UserLogin>(INITIAL_LOGIN);
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -28,22 +29,24 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
     setSubmitError('');
 
-    submitLogin(form.email, form.password, form.rememberMe)
-      .then((data) => {
-        localStorage.setItem('hiperativo_token', data.token);
-        localStorage.setItem('hiperativo_user', JSON.stringify(data.user));
-        setSuccess(true);
-      })
-      .catch((error: Error) => {
-        setSubmitError(error.message || 'Erro ao entrar. Tente novamente.');
-      })
-      .finally(() => setLoading(false));
+    try {
+      await signin(form.email, form.password, form.rememberMe);
+      navigate('/portal', { replace: true });
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Erro ao entrar. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (token) {
+    return <Navigate to="/portal" replace />;
   }
 
   return (
@@ -55,40 +58,34 @@ export default function LoginPage() {
           <p className="auth-card__subtitle">Acesse sua conta para acompanhar sua jornada acadêmica.</p>
         </div>
 
-        {success ? (
-          <div className="alert alert--success">
-            Login realizado com sucesso! Bem-vindo(a) ao portal do Hiperativo.
+        <form className="auth-form" onSubmit={handleSubmit}>
+          {submitError && <div className="alert alert--error">{submitError}</div>}
+          <div className="form-group">
+            <label className="form-label form-label--required" htmlFor="email">E-mail</label>
+            <input id="email" name="email" type="email" className={`form-input ${errors.email ? 'form-input--error' : ''}`}
+              value={form.email} onChange={handleChange} placeholder="seu@email.com" autoComplete="email" />
+            {errors.email && <span className="form-error">{errors.email}</span>}
           </div>
-        ) : (
-          <form className="auth-form" onSubmit={handleSubmit}>
-            {submitError && <div className="alert alert--error">{submitError}</div>}
-            <div className="form-group">
-              <label className="form-label form-label--required" htmlFor="email">E-mail</label>
-              <input id="email" name="email" type="email" className={`form-input ${errors.email ? 'form-input--error' : ''}`}
-                value={form.email} onChange={handleChange} placeholder="seu@email.com" autoComplete="email" />
-              {errors.email && <span className="form-error">{errors.email}</span>}
-            </div>
 
-            <div className="form-group">
-              <label className="form-label form-label--required" htmlFor="password">Senha</label>
-              <input id="password" name="password" type="password" className={`form-input ${errors.password ? 'form-input--error' : ''}`}
-                value={form.password} onChange={handleChange} placeholder="Sua senha" autoComplete="current-password" />
-              {errors.password && <span className="form-error">{errors.password}</span>}
-            </div>
+          <div className="form-group">
+            <label className="form-label form-label--required" htmlFor="password">Senha</label>
+            <input id="password" name="password" type="password" className={`form-input ${errors.password ? 'form-input--error' : ''}`}
+              value={form.password} onChange={handleChange} placeholder="Sua senha" autoComplete="current-password" />
+            {errors.password && <span className="form-error">{errors.password}</span>}
+          </div>
 
-            <div className="auth-form__options">
-              <label className="auth-form__remember">
-                <input type="checkbox" name="rememberMe" checked={form.rememberMe} onChange={handleChange} />
-                Lembrar-me
-              </label>
-              <a href="#" className="auth-form__forgot">Esqueci a senha</a>
-            </div>
+          <div className="auth-form__options">
+            <label className="auth-form__remember">
+              <input type="checkbox" name="rememberMe" checked={form.rememberMe} onChange={handleChange} />
+              Lembrar-me
+            </label>
+            <a href="#" className="auth-form__forgot">Esqueci a senha</a>
+          </div>
 
-            <button type="submit" className="btn btn--primary btn--lg" disabled={loading}>
-              {loading ? 'Entrando...' : 'Entrar'}
-            </button>
-          </form>
-        )}
+          <button type="submit" className="btn btn--primary btn--lg" disabled={loading}>
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
 
         <div className="auth-form__divider">ou</div>
 

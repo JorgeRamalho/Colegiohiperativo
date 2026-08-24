@@ -48,6 +48,30 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
 }
 
 /**
+ * Envia requisição GET autenticada à API do Hiperativo.
+ * @param path - Caminho relativo (ex.: /api/me/matriculas).
+ * @param token - JWT do usuário autenticado.
+ */
+export async function apiGetAuth<T>(path: string, token: string): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = (await response.json().catch(() => ({}))) as T & ApiErrorBody;
+
+  if (!response.ok) {
+    throw new ApiRequestError(
+      data.message || 'Erro ao comunicar com o servidor.',
+      response.status,
+      data.code
+    );
+  }
+
+  return data;
+}
+
+/**
  * Envia requisição POST JSON à API do Hiperativo.
  * @param path - Caminho relativo (ex.: /api/matriculas).
  * @param body - Payload a ser serializado como JSON.
