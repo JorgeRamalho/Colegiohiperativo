@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import jwt from "jsonwebtoken";
 import { query, waitForDb } from "./db.js";
 import { ensureSchema } from "./ensureSchema.js";
 import usuariosRouter from "./routes/usuarios.js";
@@ -14,6 +15,7 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "hiperativo-admin";
+const JWT_SECRET = process.env.JWT_SECRET || "hiperativo-dev-secret";
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
@@ -38,15 +40,70 @@ app.get("/api/health", async (_req, res) => {
 });
 
 /**
+ * Lê o JWT Bearer da requisição.
+ * @param req Requisição HTTP.
+ * @returns Payload autenticado ou null.
+ */
+function readBearerUser(req) {
+  const authHeader = req.get("authorization") || "";
+  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+  if (!bearer) {
+    return null;
+  }
+
+  try {
+    return jwt.verify(bearer, JWT_SECRET);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Middleware que exige usuário autenticado.
+ */
+function requireAuth(req, res, next) {
+  const user = readBearerUser(req);
+  if (!user) {
+    return res.status(401).json({ message: "Não autenticado." });
+  }
+  req.user = user;
+  return next();
+}
+
+/**
  * Middleware que exige token de administrador nas rotas de listagem.
  */
 function requireAdmin(req, res, next) {
   const token = req.get("x-admin-token") || req.query.token;
-  if (token !== ADMIN_TOKEN) {
-    return res.status(401).json({ message: "Não autorizado." });
+  if (token === ADMIN_TOKEN) {
+    return next();
   }
-  return next();
+
+  const user = readBearerUser(req);
+  if (user?.user_type === "funcionario") {
+    req.user = user;
+    return next();
+  }
+
+  return res.status(401).json({ message: "Não autorizado." });
 }
+
+app.get("/api/me/matriculas", requireAuth, async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, protocolo, full_name, email, phone, course_name, shift, created_at
+       FROM matriculas
+       WHERE email = $1
+       ORDER BY created_at DESC
+       LIMIT 20`,
+      [req.user.email]
+    );
+    return res.json({ items: result.rows });
+  } catch (error) {
+    console.error("Erro ao listar matrículas do usuário:", error);
+    return res.status(500).json({ message: "Erro ao listar matrículas." });
+  }
+});
 
 app.get("/api/admin/matriculas", requireAdmin, async (_req, res) => {
   try {

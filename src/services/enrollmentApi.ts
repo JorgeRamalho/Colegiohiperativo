@@ -1,6 +1,6 @@
 import type { StudentEnrollment, UserRegistration } from '../types';
 import { calculateAge, digitsOnly } from '../utils/validation';
-import { apiGet, apiPost } from './api';
+import { apiGet, apiGetAuth, apiPost } from './api';
 
 /** Resposta padronizada de submissão de formulário (Hiperativo e Saúde Mais). */
 export interface FormSubmissionResponse {
@@ -159,6 +159,38 @@ export async function verifyAccountActivation(token: string): Promise<VerifyEmai
 
   activationRequests.set(token, request);
   return request;
+}
+
+/**
+ * Matrícula retornada pelas rotas autenticadas da API.
+ */
+export interface AdminMatriculaRecord {
+  id: string;
+  protocolo: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  course_name: string | null;
+  shift: string | null;
+  created_at: string;
+}
+
+/**
+ * Lista matrículas do usuário autenticado.
+ * @param token JWT da sessão.
+ */
+export async function fetchMyMatriculas(token: string): Promise<AdminMatriculaRecord[]> {
+  const data = await apiGetAuth<{ items: AdminMatriculaRecord[] }>('/api/me/matriculas', token);
+  return data.items;
+}
+
+/**
+ * Lista matrículas para a secretaria/administração.
+ * @param token JWT de um usuário do tipo funcionario.
+ */
+export async function fetchAdminMatriculas(token: string): Promise<AdminMatriculaRecord[]> {
+  const data = await apiGetAuth<{ items: AdminMatriculaRecord[] }>('/api/admin/matriculas', token);
+  return data.items;
 }
 
 /**
