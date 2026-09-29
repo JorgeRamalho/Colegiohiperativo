@@ -8,7 +8,6 @@
     <meta name="author" content="Colégio Faculdade Hiperativo" />
     <meta name="theme-color" content="#1a56db" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/svg+xml" href="/images/logo.svg" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,6 +16,18 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/entry.ts"></script>
+    <!-- Live Server não compila TSX/React; o app roda no Vite (npm run dev). -->
+    <script>
+      (function () {
+        var port = parseInt(location.port, 10);
+        if (port < 5500 || port > 5599) return;
+        if (document.querySelector('script[src*="/assets/"]')) return;
+        var path = location.pathname.replace(/\/index\.html$/i, '') || '/';
+        location.replace(
+          'http://localhost:5173' + path + location.search + location.hash,
+        );
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

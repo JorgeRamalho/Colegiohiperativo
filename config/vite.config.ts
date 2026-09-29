@@ -1,23 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 export default defineConfig({
+  root: projectRoot,
   plugins: [react()],
-  root: resolve(__dirname, 'html5'),
-  publicDir: resolve(__dirname, 'public'),
+  publicDir: resolve(projectRoot, 'public'),
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(projectRoot, 'src'),
     },
   },
   server: {
     host: true,
     port: 5173,
     open: true,
-    fs: {
-      allow: [resolve(__dirname)],
-    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
@@ -31,7 +31,7 @@ export default defineConfig({
     open: true,
   },
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: resolve(projectRoot, 'dist'),
     emptyOutDir: true,
   },
 });

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
@@ -20,6 +20,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route path="index.html" element={<Navigate to="/" replace />} />
             <Route index element={<HomePage />} />
             <Route path="sobre" element={<AboutPage />} />
             <Route path="cursos" element={<CoursesPage />} />

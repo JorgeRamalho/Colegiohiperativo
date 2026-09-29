@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import CampusCarousel from '../components/Carousel/Carousel';
 import { BRAND, COURSE_LEVELS, SPORTS, STUDENT_PROFILES } from '../data/constants';
 import './HomePage.css';
 
@@ -45,7 +46,9 @@ const FEATURES = [
 export default function HomePage() {
   return (
     <>
-      <section className="hero">
+      <CampusCarousel />
+
+      <section className="hero hero--after-carousel">
         <div className="container hero__content">
           <div className="hero__text animate-fade-in-up">
             <div className="hero__badge">
@@ -116,7 +119,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section--gray">
+      <section className="section section--courses">
         <div className="container">
           <div className="section__header">
             <h2 className="section__title">Nossos Cursos</h2>
@@ -137,7 +140,7 @@ export default function HomePage() {
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Link to="/cursos" className="btn btn--primary btn--lg">Ver Todos os Cursos</Link>
+            <Link to="/cursos" className="btn btn--secondary btn--lg">Ver Todos os Cursos</Link>
           </div>
         </div>
       </section>

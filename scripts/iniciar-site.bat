@@ -1,6 +1,6 @@
 @echo off
 title Colégio Faculdade Hiperativo - Servidor
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 echo.
 echo  ============================================

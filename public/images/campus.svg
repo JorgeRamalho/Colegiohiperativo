@@ -9,7 +9,7 @@
       <stop offset="100%" stop-color="#1240a8"/>
     </linearGradient>
   </defs>
-  <!-- Céu -->
+  <!-- Ceu -->
   <rect width="800" height="500" fill="url(#sky)"/>
   <!-- Sol -->
   <circle cx="680" cy="80" r="50" fill="#fbbf24" opacity="0.8"/>
@@ -20,7 +20,7 @@
   <!-- Gramado -->
   <rect x="0" y="380" width="800" height="120" fill="#22c55e" opacity="0.3"/>
   <rect x="0" y="400" width="800" height="100" fill="#16a34a" opacity="0.2"/>
-  <!-- Edifício principal -->
+  <!-- Edificio principal -->
   <rect x="250" y="120" width="300" height="280" rx="8" fill="url(#building)"/>
   <!-- Janelas -->
   <g fill="#bfdbfe" opacity="0.8">
@@ -42,7 +42,7 @@
   <circle cx="415" cy="375" r="4" fill="#fbbf24"/>
   <!-- Logo no topo -->
   <rect x="340" y="130" width="120" height="20" rx="4" fill="#f97316"/>
-  <text x="400" y="144" text-anchor="middle" font-family="Poppins, Arial" font-weight="700" font-size="11" fill="white">HIPERATIVO</text>
+  <text x="400" y="144" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="11" fill="white">HIPERATIVO</text>
   <!-- Ala esquerda -->
   <rect x="120" y="200" width="130" height="200" rx="6" fill="#2563eb"/>
   <g fill="#bfdbfe" opacity="0.7">
@@ -69,12 +69,12 @@
   <circle cx="110" cy="440" r="20" stroke="white" stroke-width="2" fill="none" opacity="0.5"/>
   <!-- Piscina -->
   <rect x="630" y="420" width="100" height="40" rx="4" fill="#06b6d4" opacity="0.5"/>
-  <!-- Árvores -->
+  <!-- Arvores -->
   <circle cx="80" cy="370" r="25" fill="#16a34a"/>
   <rect x="75" y="370" width="10" height="30" fill="#854d0e"/>
   <circle cx="720" cy="370" r="25" fill="#16a34a"/>
   <rect x="715" y="370" width="10" height="30" fill="#854d0e"/>
-  <!-- Alunos (emoji-style circles) -->
+  <!-- Alunos -->
   <circle cx="200" cy="430" r="12" fill="#fbbf24"/>
   <circle cx="230" cy="435" r="10" fill="#f472b6"/>
   <circle cx="260" cy="432" r="11" fill="#60a5fa"/>

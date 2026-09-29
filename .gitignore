@@ -1,7 +1,6 @@
 node_modules
 dist
 .vite
-html5/.vite
 *.local
 .DS_Store
 tsconfig.tsbuildinfo
@@ -9,4 +8,6 @@ e2e-results
 playwright-report
 test-results
 .vercel
+json/
+config/*.tsbuildinfo
 
