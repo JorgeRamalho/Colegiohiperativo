@@ -12,3 +12,6 @@ export const EMAIL_SERVICE_URL = process.env.EMAIL_SERVICE_URL ?? "http://localh
 export const EMAIL_SERVICE_API_KEY =
   process.env.EMAIL_SERVICE_API_KEY ?? "dev-hiperativo-key";
 export const EMAIL_SERVICE_APP = process.env.EMAIL_SERVICE_APP ?? "hiperativo";
+export const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY ?? "";
+export const JWT_SECRET = process.env.JWT_SECRET ?? "change-me-in-production";
+export const ADMIN_TOKEN = process.env.ADMIN_TOKEN ?? "hiperativo-admin";

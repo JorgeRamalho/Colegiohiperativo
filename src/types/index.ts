@@ -54,10 +54,13 @@ export interface StudentEnrollment {
   howFoundUs: string;
   observations: string;
 
-  // Termos
-  acceptTerms: boolean;
-  acceptPrivacy: boolean;
-  acceptMarketing: boolean;
+   // Termos
+   acceptTerms: boolean;
+   acceptPrivacy: boolean;
+   acceptMarketing: boolean;
+
+   // reCAPTCHA
+   recaptchaResponse: string;
 }
 
 export interface UserRegistration {
@@ -128,9 +131,11 @@ export const INITIAL_ENROLLMENT: StudentEnrollment = {
   howFoundUs: '',
   observations: '',
 
-  acceptTerms: false,
-  acceptPrivacy: false,
-  acceptMarketing: false,
+   acceptTerms: false,
+   acceptPrivacy: false,
+   acceptMarketing: false,
+
+   recaptchaResponse: '',
 };
 
 export const INITIAL_REGISTRATION: UserRegistration = {

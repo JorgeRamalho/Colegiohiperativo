@@ -11,6 +11,8 @@ Registro das interações com IA e commits correspondentes no GitHub.
 | 5 | `feat: header integrado` | Menu hamburger + scroll | Header com Logo, menu mobile legível com scroll ativo |
 | 6 | `style: footer claro` | Footer branco | Fundo branco e tipografia azul escura |
 | 7 | `docs: historico IA` | Commit inicial GitHub | Documentação do histórico de interações |
+| 8 | `refactor: estrutura pastas` | Padrão de organização | Raiz enxuta (`index.html`), `src/styles`, pasta `docs/` e READMEs por área |
+| 9 | `refactor: raiz enxuta` | Organização total da raiz | `config/`, assets em `public/images`, remoção de legado (`html5`, `css3`, `json`) |
 
 ## Interações detalhadas (chat)
 
@@ -21,3 +23,5 @@ Registro das interações com IA e commits correspondentes no GitHub.
 5. **Scroll header** — Inversão azul ↔ branco; laranja/vermelho → branco.
 6. **Footer** — Tema claro com textos azuis.
 7. **Menu mobile** — Opções legíveis com header azul (scroll ativo).
+8. **Organização** — Remoção de `html5/` e `css3/`; documentação em `docs/`; README em cada pasta principal.
+9. **Raiz enxuta** — Configs em `config/`; CHANGELOG em `docs/`; imagens em `public/images/`.

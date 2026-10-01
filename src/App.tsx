@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
@@ -13,6 +13,7 @@ import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPortalPage from './pages/UserPortalPage';
 import AdminEnrollmentsPage from './pages/AdminEnrollmentsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route path="index.html" element={<Navigate to="/" replace />} />
             <Route index element={<HomePage />} />
             <Route path="sobre" element={<AboutPage />} />
             <Route path="cursos" element={<CoursesPage />} />
@@ -31,6 +33,7 @@ export default function App() {
             <Route path="confirmar-email" element={<ConfirmEmailPage />} />
             <Route path="portal" element={<UserPortalPage />} />
             <Route path="admin/matriculas" element={<AdminEnrollmentsPage />} />
+            <Route path="politica-privacidade" element={<PrivacyPolicyPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

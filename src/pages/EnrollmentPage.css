@@ -180,6 +180,35 @@
   line-height: 1.5;
 }
 
+.enrollment__security-band {
+  margin-top: var(--space-xl);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(26, 86, 219, 0.2);
+  background: linear-gradient(135deg, rgba(26, 86, 219, 0.06) 0%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+.enrollment__security-band-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-sm);
+}
+
+.enrollment__security-band-hint {
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  margin: 0 0 var(--space-lg);
+  line-height: 1.5;
+}
+
+.enrollment__security-band .g-recaptcha {
+  margin-bottom: var(--space-md);
+}
+
 .enrollment__success {
   text-align: center;
   padding: var(--space-4xl) var(--space-xl);

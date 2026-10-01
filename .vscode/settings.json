@@ -1,0 +1,12 @@
+{
+  "liveServer.settings.root": "/dist",
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/node_modules/**",
+    "api/**",
+    "e2e/**",
+    "playwright-report/**"
+  ]
+}

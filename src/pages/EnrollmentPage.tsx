@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   COURSE_LEVELS,
@@ -29,6 +29,10 @@ import { submitMatricula } from '../services/enrollmentApi';
 import type { FormSubmissionResponse } from '../services/enrollmentApi';
 import { getStoredUser } from '../utils/authSession';
 import './EnrollmentPage.css';
+
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+const RECAPTCHA_ENABLED =
+  Boolean(RECAPTCHA_SITE_KEY) && RECAPTCHA_SITE_KEY !== 'YOUR_RECAPTCHA_SITE_KEY';
 
 const STEPS: { key: EnrollmentStep; label: string }[] = [
   { key: 'personal', label: 'Dados Pessoais' },
@@ -61,6 +65,9 @@ export default function EnrollmentPage() {
   const [loadingCEP, setLoadingCEP] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState('');
+  const recaptchaRef = useRef<HTMLDivElement>(null);
+  const recaptchaWidgetId = useRef<number | null>(null);
   const hasLockedAccountFields = Boolean(storedUser);
 
   useEffect(() => {
@@ -74,6 +81,30 @@ export default function EnrollmentPage() {
       cpf: storedUser.cpf ? formatCPF(storedUser.cpf) : prev.cpf,
     }));
   }, [storedUser]);
+
+  useEffect(() => {
+    if (step !== 'review' || !RECAPTCHA_ENABLED) return;
+    if (!recaptchaRef.current || recaptchaWidgetId.current !== null) return;
+
+    const renderRecaptcha = () => {
+      const w = window as unknown as {
+        grecaptcha?: {
+          render: (el: HTMLElement, opts: Record<string, unknown>) => number;
+        };
+      };
+      if (w.grecaptcha && recaptchaRef.current) {
+        recaptchaWidgetId.current = w.grecaptcha.render(recaptchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          callback: (token: string) => setRecaptchaToken(token || ''),
+          'expired-callback': () => setRecaptchaToken(''),
+        });
+      } else {
+        setTimeout(renderRecaptcha, 100);
+      }
+    };
+
+    renderRecaptcha();
+  }, [step]);
 
   const currentStepIndex = STEPS.findIndex((s) => s.key === step);
   const isMinor = form.birthDate ? calculateAge(form.birthDate) < 18 : false;
@@ -124,7 +155,7 @@ export default function EnrollmentPage() {
   function validateStep(): boolean {
     const newErrors: FormErrors = {};
 
-    switch (step) {
+     switch (step) {
       case 'personal':
         if (!form.fullName.trim()) newErrors.fullName = 'Nome completo é obrigatório';
         if (!form.birthDate) newErrors.birthDate = 'Data de nascimento é obrigatória';
@@ -164,6 +195,9 @@ export default function EnrollmentPage() {
       case 'review':
         if (!form.acceptTerms) newErrors.acceptTerms = 'Você deve aceitar os termos';
         if (!form.acceptPrivacy) newErrors.acceptPrivacy = 'Você deve aceitar a política de privacidade';
+        if (RECAPTCHA_ENABLED && !recaptchaToken) {
+          newErrors.recaptcha = 'Por favor, complete o reCAPTCHA para enviar a matrícula';
+        }
         break;
     }
 
@@ -173,6 +207,7 @@ export default function EnrollmentPage() {
 
   function nextStep() {
     if (!validateStep()) return;
+
     const nextIndex = currentStepIndex + 1;
     if (nextIndex < STEPS.length) {
       if (STEPS[nextIndex].key === 'guardian' && !isMinor) {
@@ -198,10 +233,15 @@ export default function EnrollmentPage() {
     e.preventDefault();
     if (!validateStep()) return;
 
+    const payload: StudentEnrollment = {
+      ...form,
+      recaptchaResponse: RECAPTCHA_ENABLED ? recaptchaToken : 'local-dev-bypass',
+    };
+
     setSubmitting(true);
     setSubmitError('');
 
-    submitMatricula(form)
+    submitMatricula(payload)
       .then((result) => {
         setSubmissionResult(result);
         setSubmitted(true);
@@ -575,19 +615,42 @@ export default function EnrollmentPage() {
                 {errors.acceptTerms && <span className="form-error">{errors.acceptTerms}</span>}
 
                 <div className="enrollment__checkbox-group">
-                  <input type="checkbox" id="acceptPrivacy" checked={form.acceptPrivacy} onChange={(e) => updateField('acceptPrivacy', e.target.checked)} />
-                  <label className="enrollment__checkbox-label" htmlFor="acceptPrivacy">
-                    Concordo com a Política de Privacidade e o tratamento dos meus dados pessoais (LGPD).
-                  </label>
-                </div>
-                {errors.acceptPrivacy && <span className="form-error">{errors.acceptPrivacy}</span>}
-
-                <div className="enrollment__checkbox-group">
                   <input type="checkbox" id="acceptMarketing" checked={form.acceptMarketing} onChange={(e) => updateField('acceptMarketing', e.target.checked)} />
                   <label className="enrollment__checkbox-label" htmlFor="acceptMarketing">
                     Desejo receber informações sobre eventos, cursos e novidades por e-mail e WhatsApp.
                   </label>
                 </div>
+              </div>
+
+              <div className="enrollment__security-band" aria-labelledby="enrollment-security-title">
+                <h4 id="enrollment-security-title" className="enrollment__security-band-title">
+                  🔒 Segurança do envio
+                </h4>
+                <p className="enrollment__security-band-hint">
+                  Para proteger seus dados, confirme que você é uma pessoa real e aceite nossa política de privacidade antes de enviar a matrícula.
+                </p>
+                {RECAPTCHA_ENABLED && (
+                  <div className="form-group">
+                    <div ref={recaptchaRef} className="g-recaptcha" />
+                    {errors.recaptcha && <span className="form-error">{errors.recaptcha}</span>}
+                  </div>
+                )}
+                <div className="enrollment__checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="acceptPrivacy"
+                    checked={form.acceptPrivacy}
+                    onChange={(e) => updateField('acceptPrivacy', e.target.checked)}
+                  />
+                  <label className="enrollment__checkbox-label" htmlFor="acceptPrivacy">
+                    Li e concordo com a{' '}
+                    <Link to="/politica-privacidade" target="_blank" rel="noopener noreferrer">
+                      Política de Privacidade
+                    </Link>
+                    {' '}e o tratamento dos meus dados pessoais (LGPD).
+                  </label>
+                </div>
+                {errors.acceptPrivacy && <span className="form-error">{errors.acceptPrivacy}</span>}
               </div>
             </div>
           )}

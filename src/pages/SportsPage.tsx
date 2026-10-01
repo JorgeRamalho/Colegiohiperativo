@@ -9,7 +9,7 @@ export default function SportsPage() {
         <div className="container">
           <h1 className="page-hero__title">Esportes & Atividades</h1>
           <p className="page-hero__subtitle">
-            7 modalidades esportivas para o desenvolvimento físico, social e emocional dos nossos alunos.
+            9 modalidades esportivas para o desenvolvimento físico, social e emocional dos nossos alunos.
           </p>
         </div>
       </section>

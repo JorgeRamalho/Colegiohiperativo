@@ -6,6 +6,7 @@ import {
   buildSubmissionError,
   buildSubmissionSuccess,
 } from "@filhao/api-contract/submission-response";
+import { verifyRecaptcha } from "../utils/recaptcha.js";
 
 const router = Router();
 
@@ -50,6 +51,7 @@ const matriculaSchema = z.object({
   accept_terms: z.literal(true),
   accept_privacy: z.literal(true),
   accept_marketing: z.boolean().optional().default(false),
+  recaptcha_response: z.string().min(1, "reCAPTCHA é obrigatório"),
 });
 
 router.post("/", async (req, res) => {
@@ -65,7 +67,18 @@ router.post("/", async (req, res) => {
     );
   }
 
-  const data = parsed.data;
+   const data = parsed.data;
+
+  const recaptchaValid = await verifyRecaptcha(data.recaptcha_response);
+  if (!recaptchaValid) {
+    return res.status(400).json(
+      buildSubmissionError({
+        message: "Falha na verificação de segurança (reCAPTCHA). Tente novamente.",
+        code: "RECAPTCHA_FAILED",
+      })
+    );
+  }
+
   const protocolo = buildProtocolo("HP");
   const guardianJson = data.guardian ? JSON.stringify(data.guardian) : null;
 

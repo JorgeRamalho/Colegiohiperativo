@@ -1,8 +1,7 @@
 api
 e2e
-playwright.config.ts
+config/playwright.config.ts
 playwright-report
 test-results
 e2e-results
 .vite
-html5/.vite
