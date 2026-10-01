@@ -13,6 +13,7 @@ import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPortalPage from './pages/UserPortalPage';
 import AdminEnrollmentsPage from './pages/AdminEnrollmentsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="confirmar-email" element={<ConfirmEmailPage />} />
             <Route path="portal" element={<UserPortalPage />} />
             <Route path="admin/matriculas" element={<AdminEnrollmentsPage />} />
+            <Route path="politica-privacidade" element={<PrivacyPolicyPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

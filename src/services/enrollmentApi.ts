@@ -91,6 +91,7 @@ export function buildMatriculaPayload(form: StudentEnrollment) {
     accept_terms: true,
     accept_privacy: true,
     accept_marketing: form.acceptMarketing,
+    recaptcha_response: form.recaptchaResponse,
   };
 }
 

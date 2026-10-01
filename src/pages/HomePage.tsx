@@ -139,8 +139,8 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <Link to="/cursos" className="btn btn--secondary btn--lg">Ver Todos os Cursos</Link>
+           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+             <a href="/cursos" target="_blank" rel="noopener noreferrer" className="btn btn--secondary btn--lg">Ver Todos os Cursos</a>
           </div>
         </div>
       </section>
@@ -153,8 +153,8 @@ export default function HomePage() {
               Desenvolvimento físico e social através de modalidades esportivas de excelência.
             </p>
           </div>
-          <div className="grid grid--4">
-            {SPORTS.map((sport) => (
+           <div className="grid grid--4">
+             {SPORTS.filter((sport) => sport.id !== 'tenis').map((sport) => (
               <div key={sport.id} className="card" style={{ textAlign: 'center' }}>
                 <div className="card__body">
                   <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{sport.emoji}</div>

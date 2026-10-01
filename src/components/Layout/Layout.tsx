@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import FooterLeadForm from '../FooterLeadForm/FooterLeadForm';
 import './Layout.css';
 
 export default function Layout() {
@@ -10,6 +11,7 @@ export default function Layout() {
       <main className="layout__main">
         <Outlet />
       </main>
+      <FooterLeadForm />
       <Footer />
     </div>
   );

@@ -16,18 +16,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Live Server não compila TSX/React; o app roda no Vite (npm run dev). -->
-    <script>
-      (function () {
-        var port = parseInt(location.port, 10);
-        if (port < 5500 || port > 5599) return;
-        if (document.querySelector('script[src*="/assets/"]')) return;
-        var path = location.pathname.replace(/\/index\.html$/i, '') || '/';
-        location.replace(
-          'http://localhost:5173' + path + location.search + location.hash,
-        );
-      })();
-    </script>
     <script type="module" src="/src/main.tsx"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   </body>
 </html>

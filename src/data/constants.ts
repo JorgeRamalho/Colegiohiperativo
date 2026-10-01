@@ -88,7 +88,9 @@ export const SPORTS = [
   { id: 'futebol', name: 'Futebol Society', emoji: '⚽', description: 'Trabalho em equipe e habilidades motoras.' },
   { id: 'volei', name: 'Vôlei', emoji: '🏐', description: 'Coordenação, reflexos e espírito coletivo.' },
   { id: 'basquete', name: 'Basquete', emoji: '🏀', description: 'Agilidade, estratégia e dinamismo.' },
-  { id: 'judo', name: 'Judô', emoji: '🤼', description: 'Respeito, equilíbrio e técnica de queda.' },
+   { id: 'judo', name: 'Judô', emoji: '🤼', description: 'Respeito, equilíbrio e técnica de queda.' },
+   { id: 'handball', name: 'Handball', emoji: '🤾', description: 'Velocidade, coordenação e trabalho em equipe.' },
+   { id: 'tenis', name: 'Tênis', emoji: '🎾', description: 'Agilidade, resistência e disciplina individual.' }
 ] as const;
 
 export const GRADUATION_COURSES = [
